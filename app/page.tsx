@@ -11,7 +11,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, Spinner } from "@heroui/react";
 import { History, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
 import {ScrollShadow} from "@heroui/react";
 import CandleChart from "./components/charts/CandleChart";
@@ -23,7 +23,12 @@ import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
 import { textToSpeech } from "./api/generate/actions";
-import { candle_series } from "./components/charts/PlaceholderData";
+import { candle_data_list, line_data_list } from "./components/charts/PlaceholderData";
+import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
+
+
+
+
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -41,6 +46,7 @@ export default function Home() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]);
+  const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
 
   const addCard = (cardId: string) => {
     if (!selectedCards.includes(cardId)) {
@@ -48,6 +54,7 @@ export default function Home() {
       // console.log("added " + cardId)
     }
   }
+
 
   const removeCard = (cardId: string) => {
     setSelectedCards(selectedCards.filter(ele => ele !== cardId))

@@ -1,29 +1,44 @@
 import { ApexOptions } from "apexcharts";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useState } from "react";
+import { line_data_list } from "./PlaceholderData";
+import { apexSeriesConverter, AxisChartDataList } from "./ApexSeriesConverter";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const series: ApexAxisChartSeries = [
-  {
-    name: "Desktops",
-    data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-  },
-];
 
-const LineChart = () => {
+const LineChart = ({
+  dataList,
+  id,
+  onDataChange,
+}: {
+  dataList?: AxisChartDataList,
+  id: string,
+  onDataChange?: ( id: string, data: AxisChartDataList | string ) => void,
+}) => {
   const { theme, setTheme } = useTheme();
+    const [zoomRange, setZoomRange] = useState<{ min: number | undefined; max: number | undefined }>({
+      min: undefined,
+      max: undefined,
+    });
 
   const options: ApexOptions = {
     chart: {
       height: 250,
       type: "line",
-      background: 'transparent',
+      zoom: {
+        enabled: true,
+      },
+      background: "transparent",
+      events: {
+        zoomed: (chartContext: any, { xaxis }: any) => {
+          const filtered = dataList ? dataList.filter((point) => point.x >= xaxis.min && point.x <= xaxis.max): []
+          setZoomRange({min: xaxis.min, max: xaxis.max})
+          onDataChange && onDataChange(id, filtered ? filtered : "")
+        } 
+      },
       toolbar: { show: false }
-    },
-    dataLabels: {
-      enabled: false,
     },
     stroke: {
       curve: "smooth",
@@ -33,23 +48,21 @@ const LineChart = () => {
     },
     theme: {mode: (theme as 'light' | 'dark' | undefined)},
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
+      type: 'datetime',
+      min: zoomRange.min,
+      max: zoomRange.max,
     },
-  };
+    yaxis: {
+      show: true,
+      tooltip: {
+        enabled: false,
+      },
+    },
+  }
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="line" height={250} />
+      <ReactApexChart options={options} series={dataList ? apexSeriesConverter(dataList) : apexSeriesConverter(line_data_list)} type="line" height={250} />
     </div>
   );
 };
