@@ -7,13 +7,18 @@ export async function getDataFromQuery(portfolio: any | undefined, userQuery: st
         });
         const rawData = await response.json();
         console.log(rawData);
-        
+
         // Ensure messages field exists
         const messages: any[] = rawData.messages ?? [];
 
         // Filter and extract valid "item" values
         const extractedItems: string[] = messages
-            .filter(msg => msg.name !== null && msg.item && msg.item !== "{}")
+            .filter(msg =>
+                msg.name !== null &&
+                typeof msg.item === "string" &&
+                msg.item.trim() !== "{}" &&
+                msg.item.trim() !== "[]"
+            )
             .map(msg => msg.item);
 
         return extractedItems;
