@@ -20,25 +20,7 @@ const AudioRecorder = (props: {
 
       const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       const response = await transcribe({blob: audioBlob});
-      console.log(response)
-
-      // const formData = new FormData();
-      // formData.append("audio", audioBlob, "recording.wav");
-
-      // try {
-      //   const response = await fetch("/api/upload-audio", {
-      //     method: "POST",
-      //     body: formData,
-      //   });
-
-      //   if (response.ok) {
-      //     console.log("Audio file uploaded successfully.");
-      //   } else {
-      //     console.error("Failed to upload audio.");
-      //   }
-      // } catch (error) {
-      //   console.error("Error uploading audio:", error);
-      // }
+      props.onWhisperResponse(response);
     }
   };
 
@@ -83,16 +65,6 @@ const AudioRecorder = (props: {
 
     // Toggle the recording state
     setIsRecording(!isRecording);
-  };
-
-  // Download the audio file when clicked
-  const downloadAudio = () => {
-    if (audioUrl) {
-      const link = document.createElement("a");
-      link.href = audioUrl;
-      link.download = "recording.wav"; // Specify the file name
-      link.click();
-    }
   };
 
   return <>

@@ -40,19 +40,47 @@ export default function Home() {
     // console.log("removed " + cardId)
   }
 
+  // todo: add functionality to add selected cards and so on.
+  const sendPrompt = (promptMessage: string) => {
+
+    const currentHistory = history;
+    currentHistory.push({
+      message: promptMessage,
+      sender: "user"
+    });
+    setInputValue("");
+    setHistory([...currentHistory]);
+
+  }
+
+
   return <>
     <div className="h-screen w-screen flex">
-      <aside className={cn(styles.history, "h-full bg-secondary-light dark:bg-secondary-dark transition-[width] duration-500 ease-in-out transition-[transform,width]", showHistory ? "w-[400px] translate-x-0" : "w-[0] translate-x-[-400px]")}>
-        <h2 className="p-5">Interaction Chat</h2>
-        <main className="w-full flex flex-col p-5 justify-self-end">
-          {
-            history.map((message, idx) => {
-              return <Card className={cn("my-2 p-2 w-fit w-max-[200px] bg-main-light dark:bg-main-dark", message.sender == "user" ? "self-end" : "self-start")} key={idx}>
-                {message.message}
-              </Card>
-            })
-          }
-        </main>
+      <aside className={
+        cn(styles.history, "h-full flex flex-col bg-secondary-light dark:bg-secondary-dark", 
+          "duration-500 ease-in-out transition-[transform,width]",
+          "z-[999] absolute top-0 left-0 shadow-2xl lg:static",
+          showHistory ? "w-[80%] lg:w-[30%] translate-x-0" : "w-[0] translate-x-[-400px]")
+      }>
+        <div className="flex p-5 justify-between items-center">
+          <h2>Interaction Chat</h2>
+          <Button isIconOnly onPress={() => setShowHistory(!showHistory)}>
+            <X />
+          </Button>
+        </div>
+        <ScrollShadow hideScrollBar>
+          <main className="w-full overflow-y-auto no-scrollbar">
+            <div className="w-full flex flex-col p-5 justify-self-end">
+              {
+                history.map((message, idx) => {
+                  return <Card className={cn("my-2 p-2 w-fit w-max-[200px] bg-main-light dark:bg-main-dark", message.sender == "user" ? "self-end" : "self-start")} key={idx}>
+                    {message.message}
+                  </Card>
+                })
+              }
+            </div>
+          </main>
+        </ScrollShadow>
       </aside>
       <div className="h-screen w-full flex flex-col">
         <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
