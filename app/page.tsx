@@ -23,7 +23,7 @@ import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
 import { textToSpeech } from "./api/generate/actions";
-import { candle_data_list, line_data_list } from "./components/charts/PlaceholderData";
+import { candle_data_list, line_data_list, pie_data_list } from "./components/charts/PlaceholderData";
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 
 
@@ -232,8 +232,8 @@ export default function Home() {
               <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
               <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
-              <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-              <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
+              <TableCard id="5" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
+              <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
             </div>
             
                
