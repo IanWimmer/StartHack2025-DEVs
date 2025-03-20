@@ -16,9 +16,11 @@ export default async function Home() {
         <p>Supabase client successfully initialized!</p> :
         <p>Supabase did not respond yet...</p>
       }
-      <ThemeSwitcher />
-      <SupabaseTestButton />
-      <MilvusStatus />
+      
     </div>
   );
 }
+
+/**<ThemeSwitcher />
+      <SupabaseTestButton />
+      <MilvusStatus /> */
