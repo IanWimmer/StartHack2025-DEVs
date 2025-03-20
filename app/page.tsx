@@ -23,6 +23,7 @@ import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
 import { textToSpeech } from "./api/generate/actions";
+import { candle_series } from "./components/charts/PlaceholderData";
 
 // chat can we get a pog chat?
 type ChatHistory = {
