@@ -85,12 +85,28 @@ const AudioRecorder = (props: {
     setIsRecording(!isRecording);
   };
 
+  // Download the audio file when clicked
+  const downloadAudio = () => {
+    if (audioUrl) {
+      const link = document.createElement("a");
+      link.href = audioUrl;
+      link.download = "recording.wav"; // Specify the file name
+      link.click();
+    }
+  };
+
   return <>
+
     <div>
       <Button onPress={toggleRecording} isIconOnly className="h-full" >
         {isRecording ? <MicOff /> : <Mic />}
       </Button>
     </div>
+{/* 
+    <Button className="h-full aspect-square" onPress={toggleRecording} isIconOnly>
+      {isRecording ? <MicOff /> : <Mic />}
+    </Button> */}
+
   </>
 };
 
