@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { SupabaseTestButton } from "./components/SupabaseTestButton";
 import MilvusStatus from "./components/MilvusStatus";
+import ApiTest from "./components/ApiTest"
 import { secondary_font } from "@/lib/fonts";
 
 export default async function Home() {
@@ -16,7 +17,7 @@ export default async function Home() {
         <p>Supabase client successfully initialized!</p> :
         <p>Supabase did not respond yet...</p>
       }
-      
+      <ApiTest/>
     </div>
   );
 }

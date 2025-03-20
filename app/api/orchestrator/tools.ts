@@ -1,24 +1,7 @@
-export async function GET(request: Request) {
-    const query = "Apple";
-
-    //const summaryData = await getSummary(query);
-    //const companyData = await getCompanyDataSearch(query);
-    //const searchData = await getSearchWithCriteria(query);
-    const ohlcvData = await getOhlcv(query, "01.09.2024", "30.10.2024")
-
-    if (ohlcvData) {
-        return new Response(ohlcvData, {
-            status: 200,
-            headers: { "Content-Type": "text/plain" },
-        });
-    }
-    else {
-        return new Response("Error fetching data", { status: 500 });
-    }
-}
-
-async function getSummary(query: string): Promise<string | undefined> {
+export async function getSummary(args: Record<string, any>): Promise<string | undefined> {
     try {
+        const query = args["company"]
+
         const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/summary?query=${query}`, {
             method: "POST",
         });
@@ -35,13 +18,15 @@ async function getSummary(query: string): Promise<string | undefined> {
 
         return dataString
     } catch (error) {
-        console.error(`❌ Error calling:`, error);
+        console.error(`Error calling:`, error);
         return undefined
     }
 }
 
-async function getCompanyDataSearch(query: string): Promise<string | undefined> {
+export async function getCompanyDataSearch(args: Record<string, any>): Promise<string | undefined> {
     try {
+        const query = args["query"]
+
         const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/companydatasearch?query=${query}`, {
             method: "POST",
         });
@@ -67,37 +52,10 @@ async function getCompanyDataSearch(query: string): Promise<string | undefined> 
     }
 }
 
-function restructureCompanyData(rawData: any): Record<string, any> {
-    const transformedData: Record<string, any> = {};
-
-    // Get company names from the "Name" field
-    const companyNames = rawData["Name"];
-
-    if (!companyNames) {
-        console.error("No 'Name' field found in data.");
-        return {};
-    }
-
-    // Iterate through each company entry (0, 1, etc.)
-    Object.keys(companyNames).forEach((index) => {
-        const companyName = companyNames[index];
-
-        // Initialize company object
-        transformedData[companyName] = {};
-
-        // Assign all properties related to this company
-        for (const key in rawData) {
-            if (key !== "Name") {
-                transformedData[companyName][key] = rawData[key][index];
-            }
-        }
-    });
-
-    return transformedData;
-}
-
-async function getSearchWithCriteria(query: string): Promise<string | undefined> {
+export async function getSearchWithCriteria(args: Record<string, any>): Promise<string | undefined> {
     try {
+        const query = args["queries"];
+        
         const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/searchwithcriteria?query=${query}`, {
             method: "POST",
         });
@@ -118,14 +76,22 @@ async function getSearchWithCriteria(query: string): Promise<string | undefined>
 
         return JSON.stringify(restructured)
     } catch (error) {
-        console.error(`❌ Error calling:`, error);
+        console.error(`Error calling:`, error);
         return undefined
     }
 }
 
-async function getOhlcv(query: string, from: string, to: string): Promise<string | undefined> {
+export async function getOhlcv(args: Record<string, any>): Promise<string | undefined> {
     try {
-        const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/ohlcv?query=${query}&first=${from}&last=${to}`, {
+        const query = args["query"];
+        const first = args["first"];
+        const last = args["last"];
+
+        console.log(query);
+        console.log(first);
+        console.log(last);
+
+        const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/ohlcv?query=${query}&first=${first}${last ? `&last=${last}` : ""}`, {
             method: "POST",
         });
         const rawData = await response.json();
@@ -152,6 +118,35 @@ async function getOhlcv(query: string, from: string, to: string): Promise<string
         console.error(`Error calling:`, error);
         return undefined
     }
+}
+
+function restructureCompanyData(rawData: any): Record<string, any> {
+    const transformedData: Record<string, any> = {};
+
+    // Get company names from the "Name" field
+    const companyNames = rawData["Name"];
+    
+    if (!companyNames) {
+        console.error("No 'Name' field found in data.");
+        return {};
+    }
+
+    // Iterate through each company entry (0, 1, etc.)
+    Object.keys(companyNames).forEach((index) => {
+        const companyName = companyNames[index];
+
+        // Initialize company object
+        transformedData[companyName] = {};
+
+        // Assign all properties related to this company
+        for (const key in rawData) {
+            if (key !== "Name") {
+                transformedData[companyName][key] = rawData[key][index];
+            }
+        }
+    });
+
+    return transformedData;
 }
 
 function limitOHLCVEntries(data: Record<string, any>, maxEntries: number = 30): Record<string, any> {
