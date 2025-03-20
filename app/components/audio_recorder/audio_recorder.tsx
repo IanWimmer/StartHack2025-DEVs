@@ -17,7 +17,7 @@ const AudioRecorder = (props: {
     if (audioUrl) {
 
       console.log("there exists an audioURL");
-      
+
       const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       const response = await transcribe({blob: audioBlob});
       console.log(response)
