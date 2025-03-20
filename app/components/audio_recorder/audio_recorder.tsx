@@ -69,8 +69,8 @@ const AudioRecorder = (props: {
 
   return <>
     <div>
-      <Button onPress={toggleRecording} isIconOnly className="h-full" >
-        {isRecording ? <MicOff /> : <Mic />}
+      <Button onPress={toggleRecording} className={`h-full ${isRecording ? 'bg-red-500' : ''}`}>
+        <Mic />
       </Button>
     </div>
   </>
