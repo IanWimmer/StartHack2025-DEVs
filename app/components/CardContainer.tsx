@@ -1,9 +1,6 @@
-"use client"
-
 import { Card, CardHeader, CardBody } from "@heroui/react";
-import { Checkbox } from "@heroui/react";
 import { cn } from "@/lib/utils";
-import React, { ChangeEvent, MouseEvent, useState } from "react";
+import React, { MouseEvent, useState } from "react";
 
 const CardContainer = ({
   id,
@@ -11,6 +8,9 @@ const CardContainer = ({
   content,
   onSelect,
   onDeselect,
+
+  rowSpan = "1",
+  colSpan = "1",
   className,
 }: {
   id: string;
@@ -18,6 +18,9 @@ const CardContainer = ({
   content?: string | React.ReactElement;
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
+
+  rowSpan?: string,
+  colSpan?: string,
   className?: string;
 }) => {
   const [isSelected, setIsSelected] = useState(false);
@@ -41,7 +44,7 @@ const CardContainer = ({
 
   return (
     <div
-      className={cn("cardContainer h-full max-h-full", className)}
+      className={cn("cardContainer h-full max-h-full", "row-span-" + rowSpan, "col-span-" + colSpan, className)}
       onClick={onCardClick}
     >
       <Card className={cn(
@@ -51,7 +54,7 @@ const CardContainer = ({
         <CardHeader>
           <p>{title}</p>
         </CardHeader>
-        <CardBody>{content ? content : ""}</CardBody>
+        <CardBody className={cn((content) && "h-fit") } >{content ? content : ""}</CardBody>
       </Card>
     </div>
   );
