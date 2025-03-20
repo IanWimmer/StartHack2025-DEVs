@@ -9,6 +9,7 @@ import { secondary_font } from "@/lib/fonts";
 
 export default async function Home() {
   const supabase = await createClient();
+  const openai_key = process.env.OPENAI_KEY!;
 
   return (
     <div className="bg-background h-screen w-full flex flex-col justify-center items-center gap-8">
@@ -17,7 +18,7 @@ export default async function Home() {
         <p>Supabase client successfully initialized!</p> :
         <p>Supabase did not respond yet...</p>
       }
-      <ApiTest/>
+      <ApiTest apikey={openai_key}/>
     </div>
   );
 }

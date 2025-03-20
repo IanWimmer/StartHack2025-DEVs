@@ -4,7 +4,12 @@ import { useState } from "react";
 import { Button } from "@heroui/button";
 import {Spinner} from "@heroui/spinner";
 
-export default function Home() {
+
+interface ApiTestProps {
+    apikey: string;
+}
+
+export default function ApiTest(props: ApiTestProps) {
     const [messages, setMessages] = useState<string[]>([]);
     const [jsonData, setJsonData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
@@ -14,21 +19,23 @@ export default function Home() {
         setJsonData(null);
         setLoading(true);
 
-        const query = "Should I increase the exposure to tech stocks in this portfolio, given recent market fluctuations?.";
+        const query = "Should the client invest in cryptocurrency given this portfolio and current market fluctuations?";
         const portfolio = {
             assets: [
                 { ticker: "AAPL", shares: 10, purchasePrice: 150 },
                 { ticker: "TSLA", shares: 5, purchasePrice: 700 },
                 { ticker: "GOOGL", shares: 8, purchasePrice: 2500 },
+                { ticker: "TMO", shares: 15, purchasePrice: 1000 }
             ],
             cash: 5000,
         };
+        const apiKey = props.apikey;
 
         try {
             const res = await fetch("/api/orchestrator", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query, portfolio }),
+                body: JSON.stringify({ apiKey, query, portfolio }),
             });
 
             // Read the response as a stream
